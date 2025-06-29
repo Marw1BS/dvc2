@@ -18,12 +18,13 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
+
       - name: Install MLflow CLI
         run: pip install mlflow==2.22.0
 
       - name: Download model artifact from DagsHub
         env:
-          MLFLOW_TRACKING_URI: https://dagshub.com/arthur-gtgn/mlflow-with-daghub.mlflow
+          MLFLOW_TRACKING_URI: https://dagshub.com/Marw1BS/dvc2.mlflow
         run: |
           mkdir -p models/random_forest_model
           mlflow artifacts download \
@@ -40,9 +41,9 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --tag arthur03/mlops-exercise:${{ github.sha }} \
+            --tag marw1bs/dvc-api-app:${{ github.sha }} \
             .
 
       - name: Push to DockerHub
         run: |
-          docker push arthur03/mlops-exercise:${{ github.sha }}
+          docker push marw1bs/dvc-api-app:${{ github.sha }}
