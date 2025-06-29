@@ -24,11 +24,11 @@ jobs:
 
       - name: Download model artifact from DagsHub
         env:
-          MLFLOW_TRACKING_URI: https://dagshub.com/Marw1BS/dvc2.mlflow
+          MLFLOW_TRACKING_URI: https://dagshub.com/Marw1BS/dvc.mlflow
         run: |
           mkdir -p models/random_forest_model
           mlflow artifacts download \
-            --run-id 48e8413cd9ff4bdaa456248f34ca7df8 \
+            --run-id 920f98cd99cc46909114a50fa7b360f4 \
             --artifact-path random_forest_model_2/model.pkl \
             --dst-path models/random_forest_model
 
