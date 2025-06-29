@@ -1,0 +1,7 @@
+[core]
+    remote = storage
+
+[remote "storage"]
+    url = azure://dvc-storage
+    account_name = mlstorage6356
+    account_key = ${AZURE_KEY}  # ou supprime carrément cette ligne si tu n’en as pas besoin
