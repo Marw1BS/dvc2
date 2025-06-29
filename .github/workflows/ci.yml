@@ -32,7 +32,6 @@ jobs:
             --artifact-path model.joblib \
             --dst-path models/random_forest_model
 
-
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
@@ -40,11 +39,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: |
-          docker build \
-            --tag marw1bs/dvc-api-app:${{ github.sha }} \
-            .
+        run: docker build -t mrwnbnslm/dv2:latest .
 
       - name: Push to DockerHub
-        run: |
-          docker push marw1bs/dvc-api-app:${{ github.sha }}
+        run: docker push mrwnbnslm/dv2:latest
