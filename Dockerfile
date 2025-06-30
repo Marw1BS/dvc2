@@ -5,9 +5,14 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src/ ./src/
+# Ajoute DVC + Git (pour pouvoir faire dvc pull depuis DagsHub)
+RUN pip install dvc[gs] git
 
-COPY models/random_forest_model/model.joblib ./models/random_forest_model/
+# Copie tout le projet (y compris .dvc, .gitignore, src etc.)
+COPY . .
+
+# Récupère les données suivies par DVC (comme le modèle)
+RUN dvc pull -f
 
 EXPOSE 8000
 
