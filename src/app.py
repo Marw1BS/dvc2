@@ -1,43 +1,41 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
-from starlette.middleware.trustedhost import TrustedHostMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
+from fastapi import FastAPI
 import joblib
 import pandas as pd
+from sklearn.datasets import load_digits
 
 app = FastAPI()
 
-# Support HTTPS behind proxy
-app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
-
-# Autoriser CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Chargement du modèle
-model = joblib.load("models/random_forest_model/model.joblib")
-print("✅ Modèle chargé avec succès")
+try:
+    model = joblib.load("models/random_forest_model/model.joblib")
+    print("✅ Modèle chargé avec succès")
+except Exception as e:
+    model = None
+    print(f"❌ Erreur lors du chargement du modèle : {e}")
 
+# Route de test
 @app.get("/")
-def read_root():
+def root():
     return {"message": "API UP ✅"}
 
+# Route de prédiction
 @app.get("/predict")
-def predict_example():
-    # Ex de prédiction avec des valeurs mock
-    input_data = {
-        "feature1": 1.0,
-        "feature2": 2.0,
-        "feature3": 3.0,
-        "feature4": 4.0
+def predict():
+    if model is None:
+        return {"error": "Le modèle n'a pas pu être chargé."}
+
+    # Charger les données de test
+    digits = load_digits()
+    df = pd.DataFrame(digits.data, columns=digits.feature_names)
+    df["target"] = digits.target
+
+    # Prédiction sur une ligne aléatoire
+    random_line = df.sample(n=1)
+    x = random_line.drop(columns=["target"]).to_dict(orient="records")[0]
+    y = model.predict(random_line.drop(columns=["target"]).values)
+
+    return {
+        "input": x,
+        "prediction": float(y[0]),
+        "actual": int(random_line["target"].iloc[0])
     }
-    df = pd.DataFrame([input_data])
-    prediction = model.predict(df)[0]
-    return {"prediction": str(prediction)}
