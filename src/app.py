@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 import joblib
 import pandas as pd
 from sklearn.datasets import load_digits
 
 app = FastAPI()
+
+# Redirection automatique HTTP ➝ HTTPS (important pour Koyeb)
+app.add_middleware(HTTPSRedirectMiddleware)
 
 # Chargement du modèle
 try:
@@ -24,12 +28,10 @@ def predict():
     if model is None:
         return {"error": "Le modèle n'a pas pu être chargé."}
 
-    # Charger les données de test
     digits = load_digits()
     df = pd.DataFrame(digits.data, columns=digits.feature_names)
     df["target"] = digits.target
 
-    # Prédiction sur une ligne aléatoire
     random_line = df.sample(n=1)
     x = random_line.drop(columns=["target"]).to_dict(orient="records")[0]
     y = model.predict(random_line.drop(columns=["target"]).values)

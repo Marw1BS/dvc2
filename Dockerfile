@@ -15,12 +15,10 @@ RUN pip install dvc[http]
 # Copier tout le projet
 COPY . .
 
-# Copier le modèle suivi par DVC (si tu l’as dvc add + dvc push)
-# Assure-toi que .dvc/config et .dvc/cache existent
+# Récupérer les données suivies par DVC
 RUN dvc pull -f || echo "⚠️ DVC pull failed (peut-être en local seulement)"
 
-# Exposer le port
 EXPOSE 8000
 
-# Lancer FastAPI
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Lancer FastAPI avec support proxy (requis par Koyeb pour le HTTPS)
+CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips", "*"]
