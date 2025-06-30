@@ -89,7 +89,7 @@ hydra-core==1.3.2
 idna==3.10
 importlib-metadata==7.2.1
 ipykernel==6.29.5
-ipython==9.3.0
+ipython==8.18.1
 ipython-pygments-lexers==1.1.1
 isodate==0.7.2
 iterative-telemetry==0.0.10
@@ -119,7 +119,7 @@ msal-extensions==1.3.1
 multidict==6.5.1
 mypy-extensions==1.1.0
 nest-asyncio==1.6.0
-networkx==3.5
+networkx==3.4.2
 numpy==1.26.4
 omegaconf==2.3.0
 opentelemetry-api==1.34.1
@@ -165,7 +165,7 @@ ruamel-yaml==0.18.14
 ruamel-yaml-clib==0.2.12
 s3transfer==0.13.0
 scikit-learn==1.7.0
-scipy==1.16.0
+scipy==1.11.4
 scmrepo==3.3.11
 semver==3.0.4
 setuptools==80.9.0
