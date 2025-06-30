@@ -1,0 +1,33 @@
+name: Staging - CI
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Promote to staging
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git checkout staging
+          git merge dev --no-ff -m "Promote to staging"
+          git push origin staging
+
+  test:
+    needs: promote
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Run full tests
+        run: |
+          pytest tests/
